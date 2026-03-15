@@ -1,0 +1,3 @@
+H:/Documents/Projects/airgead_banking/build/CMakeFiles/AirgeadBanking.dir
+H:/Documents/Projects/airgead_banking/build/CMakeFiles/ALL_BUILD.dir
+H:/Documents/Projects/airgead_banking/build/CMakeFiles/ZERO_CHECK.dir
