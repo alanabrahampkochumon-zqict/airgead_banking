@@ -23,4 +23,10 @@ target_sources(
     ${SourceFiles}
 )
 
+target_include_directories(
+    AirgeadBanking
+    PRIVATE
+    $<BUILD_INTERFACE:${CMAKE}>
+)
+
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT AirgeadBanking)
