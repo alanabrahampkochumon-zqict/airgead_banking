@@ -7,35 +7,54 @@
  *
  * @brief Representation of an Airgead recurring account.
  */
+
+#include "Config.h"
+
+
+
 class Account
 {
 public:
-    /**
-     * @brief Initializes an account with no balance.
-     */
-    Account();
-
+    
     /**
      * @brief Initialize an account with a provided balance.
      * 
      * @param balance Balance to start the account with.
+     * @param maturityPeriod The maturity period of deposit.
+     * @param anticipatedDeposit The anticipated deposit that user will make per month.
+     * @param interest The interest of the account in percentage (0 - 100)
+     *
+     * @throw std::invalid_argument If @p balance or @p anticipatedDeposit is negative or @p maturityPeriod or @p interest is less than 1.
      */
-    Account(float balance);
+    Account(float balance, int maturityPeriod, float anticipatedDeposit, int interest);
 
 
     /**
      * @brief Output the calculated maturity amount per year.
      *
-     * @param includeDeposit An indicator whether to include monthly deposit in the calculation
+     * @param includeDeposit An indicator whether to include monthly deposit in the calculation.
      *
      */
-    void printInterestTable(bool includeDeposit = false);
+    void printInterestTable(bool includeDeposit = false) const;
 
 
 private:
-    float balance; ///< Balance in the account.
-    int maturityPeriod; ///< Maturity period of the account in years.
-    float anticipatedDeposit; ///< Deposit use promises to make on a monthly basis.
+    float m_balance; ///< Balance in the account.
+    int m_maturityPeriod; ///< Maturity period of the account in years.
+    float m_anticipatedDeposit; ///< Deposit user promise to make on a monthly basis.
+    int m_interest; ///< Interest payout of the account in percentage (0-100).
+
+
+    /**
+     * @brief Calculate the compound interest.
+     *        Using: \f[
+     *                   \text{Compound Interest} = (\text{Opening Amount} + \text{Deposit}) \cdot \frac{12}{100} \cdot \text{Interest Rate}
+     *               \f]
+     *
+     * @param baseAmount The opening amount to use for calculating interest.
+     * @return Interest paid out.
+     */
+    float calculateInterest(float baseAmount) const;
 };
 
 
