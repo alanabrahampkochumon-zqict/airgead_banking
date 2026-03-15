@@ -33,7 +33,7 @@ Account::Account(float balance, int maturityPeriod, float anticipatedDeposit, in
 
 float Account::calculateInterest(float baseAmount) const
 {
-    return (baseAmount + m_anticipatedDeposit) * ((m_interest) * 12.0f / 100.0f);
+    return (baseAmount + m_anticipatedDeposit) * (static_cast<float>(m_interest) / 12.0f / 100.0f);
 }
 
 
@@ -47,12 +47,16 @@ float Account::calculateInterest(float baseAmount) const
 static void printRows(const std::vector<std::string>& rows, bool includeSeparator = false)
 {
     for (const auto& row : rows)
-        std::cout << std::setw(COLUMN_WIDTH) << row;
+        std::cout << std::setfill(' ') << std::setw(COLUMN_WIDTH) << row;
 
     // Outputs the separator ----
     if (includeSeparator)
-        std::cout << std::setw(COLUMN_WIDTH * rows.size()) << std::setfill('-') << ""
+    {
+        std::cout << "\n" << std::setw(COLUMN_WIDTH * rows.size()) << std::setfill('-') << ""
                   << "\n";
+        std::cout << std::setfill(' ');
+    }
+    std::cout << "\n";
 }
 
 
@@ -73,6 +77,7 @@ void Account::printInterestTable(bool includeDeposit) const
     {
         const float interestPayout = calculateInterest(baseAmount);
         const float totalAmount = baseAmount + interestPayout;
-        printRows(i, interestPayout, totalAmount);        
+        printRows({ std::to_string(i), formatCurrency(totalAmount), formatCurrency(interestPayout) }); 
+        baseAmount = totalAmount;
     }
 }

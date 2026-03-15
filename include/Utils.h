@@ -55,6 +55,7 @@ inline std::string formatCurrency(float amount)
     std::stringstream data;
     data << CURRENCY_SYMBOL;
     data << std::setprecision(2);
+    data << std::fixed;
     data << amount;
 
     return data.str();
