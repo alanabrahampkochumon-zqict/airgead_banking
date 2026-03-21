@@ -18,7 +18,8 @@
 
 /**
  * @brief Outputs a @ref std::string with center alignment to the console.
- * @param str The string to print.
+ *
+ * @param str       The string to print.
  * @param lineWidth The total width of the console output.
  */
 inline void printCentered(const std::string& str, const int lineWidth)
@@ -33,7 +34,8 @@ inline void printCentered(const std::string& str, const int lineWidth)
 
 /**
  * @brief Outputs a table header to the screen.
- * @param str The string to print.
+ *
+ * @param str       The string to print.
  * @param lineWidth The total width of the console output.
  */
 inline void printTableHeader(const std::string& str, const int lineWidth)
@@ -47,7 +49,9 @@ inline void printTableHeader(const std::string& str, const int lineWidth)
 /**
  * @brief Formats an amount to a currency with 1/100th precision.
  *        Adds currency symbol.
+ *
  * @param amount The amount to format.
+ *
  * @return The formatted amount.
  */
 inline std::string formatCurrency(float amount)

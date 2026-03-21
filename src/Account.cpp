@@ -38,11 +38,11 @@ float Account::calculateInterest(float baseAmount) const
 
 
 /**
- * @brief Outputs the content as a row.
+ * @brief Output the content as a row.
  *
- * @param rows: The row of data to print.
- * @param includeSeparator: A flag to whether print the separate.
- *        Default false.
+ * @param rows             The row of data to print.
+ * @param includeSeparator A flag to whether print the separate.
+ *                          Default false.
  */
 static void printRows(const std::vector<std::string>& rows, bool includeSeparator = false)
 {
