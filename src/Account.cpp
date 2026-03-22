@@ -109,5 +109,6 @@ void Account::printInterestTable(bool includeDeposit) const
         // Update the base amount to be the new CI deposit
         baseAmount = totalAmount;
     }
+    // TODO: Revert back to black-white color
     std::cout << "\n";
 }

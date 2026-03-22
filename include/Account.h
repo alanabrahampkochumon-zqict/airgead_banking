@@ -53,10 +53,20 @@ private:
      *
      * @param baseAmount            The opening amount to use for calculating interest.
      * @param includeMonthlyDeposit A flag to indicate whether to include monthly deposit in calculation.
-     * @return The interest payout.
+     *
+     * @return The monthly interest payout.
      */
     float calculateMonthlyInterest(float baseAmount, bool includeMonthlyDeposit = false) const;
 
+    /**
+     * @brief Calculate the yearly compound interest payout.
+     *
+     * @param baseAmount     The base amount to use for calculation.
+     *                       This can be the starting yearly amount.
+     * @param includeDeposit A flag to indicate whether to include monthly deposit in calculation.
+     *
+     * @return The yearly interest payout.
+     */
     float Account::calculateYearlyInterest(float baseAmount, bool includeDeposit) const;
 };
 
