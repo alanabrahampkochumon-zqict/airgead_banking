@@ -116,7 +116,56 @@ void Account::printInterestTable(bool includeDeposit) const
 
 Account Account::createAccount()
 {
+    std::cout << CONSOLE_COLOR; // Configures console to print in color of the config.
+
     std::cout << std::setw(2 * COLUMN_WIDTH) << std::setfill('*') << "" << "\n";
     printCentered(" Data Input ", 2 * COLUMN_WIDTH, '*');
-    return Account(1, 10, 50.0, 5);
+    std::cout << "\n";
+
+    constexpr int inputSize = 4; // The number of inputs.
+
+    // Indices for the different data types.
+    constexpr static unsigned int AMOUNT_INDEX = 0;
+    constexpr static unsigned int DEPOSIT_INDEX = 1;
+    constexpr static unsigned int INTEREST_INDEX = 2;
+    constexpr static unsigned int YEAR_INDEX = 3;
+    
+    const std::string messages[inputSize] = { "Initial Investment Amount: ", "Monthly Deposit: ", "Annual Interest: ",
+                                         "Number of years: " };
+
+    float data[inputSize]; // Temporary storage getting data
+
+
+    int i = 0;
+    while (i < inputSize)
+    {
+        try
+        {
+            std::cout << messages[i];
+            std::cin >> data[i];
+            if (data[i] < 1.0f)
+                throw std::runtime_error("Invalid input. Must be a positive number.");
+            ++i;
+        }
+        catch (const std::ios_base::failure& _)
+        {
+            std::cout << "Invalid option! Try 1 - 4" << "\n";
+            // Clears the input buffer.
+            std::cin.clear();
+            // Clears any errorneous input till newline
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        catch (const std::runtime_error& e)
+        {
+            std::cout << e.what() << "\n";
+            // Clears the input buffer.
+            std::cin.clear();
+            // Clears any errorneous input till newline
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+    std::cout << "Press any key to continue...\n\n\n\n";
+    std::cin.get(); // Pauses the execution then and there
+
+    return Account(data[AMOUNT_INDEX], data[YEAR_INDEX], data[DEPOSIT_INDEX], data[INTEREST_INDEX]);
 }
