@@ -61,21 +61,21 @@ static void printRows(const std::vector<std::string>& rows, bool includeSeparato
     std::cout << "\n";
 }
 
-float Account::calculateYearlyDeposit(float baseAmount, bool includeDeposit) const
+float Account::calculateYearlyInterest(float baseAmount, bool includeDeposit) const
 {
-
     // Calculate the yearly interest
     float eoyInterest = 0.0f;
     for (int j = 0; j < 12; ++j)
     {
+        const float interest = calculateMonthlyInterest(baseAmount, includeDeposit);
 
-        float interest = calculateMonthlyInterest(baseAmount, includeDeposit);
         // Increment base amount if `includeDeposit` is true
         baseAmount = includeDeposit ? baseAmount + m_anticipatedDeposit + interest : baseAmount;
+
+        // Add the current month's interest to the yearly total
         eoyInterest += interest;
     }
-    std::cout << eoyInterest << ", ";
-    std::cout << "\n";
+
     return eoyInterest;
 }
 void Account::printInterestTable(bool includeDeposit) const
@@ -90,22 +90,24 @@ void Account::printInterestTable(bool includeDeposit) const
 
     printRows({ "Year", "Year End Balance", "Year End Interest" }, true);
 
+
     float baseAmount = m_balance;
     for (int i = 1; i < m_maturityPeriod; ++i)
     {
-
-        
         // Calculate the yearly interest
-        float eoyInterest = calculateYearlyDeposit(baseAmount, includeDeposit);
+        const float eoyInterest = calculateYearlyInterest(baseAmount, includeDeposit);
 
         // Calculate the deposit based on the includeDeposit flag
         const float deposit = (includeDeposit ? m_anticipatedDeposit * 12 : 0);
 
         // Calculate end of year amount
         const float totalAmount = baseAmount + eoyInterest + deposit;
+
         // Print the amount
         printRows({ std::to_string(i), formatCurrency(totalAmount), formatCurrency(eoyInterest) });
+
         // Update the base amount to be the new CI deposit
         baseAmount = totalAmount;
     }
+    std::cout << "\n";
 }
