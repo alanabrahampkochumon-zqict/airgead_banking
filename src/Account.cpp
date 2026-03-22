@@ -96,7 +96,7 @@ void Account::printInterestTable(bool includeDeposit) const
 
 
     float baseAmount = m_balance;
-    for (int i = 1; i < m_maturityPeriod; ++i)
+    for (int i = 0; i < m_maturityPeriod; ++i)
     {
         // Calculate the yearly interest
         const float eoyInterest = calculateYearlyInterest(baseAmount, includeDeposit);
@@ -108,7 +108,7 @@ void Account::printInterestTable(bool includeDeposit) const
         const float totalAmount = baseAmount + eoyInterest + deposit;
 
         // Print the amount
-        printRows({ std::to_string(i), formatCurrency(totalAmount), formatCurrency(eoyInterest) });
+        printRows({ std::to_string(i + 1), formatCurrency(totalAmount), formatCurrency(eoyInterest) });
 
         // Update the base amount to be the new CI deposit
         baseAmount = totalAmount;
