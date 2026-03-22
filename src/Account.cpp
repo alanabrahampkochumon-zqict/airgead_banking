@@ -61,26 +61,22 @@ static void printRows(const std::vector<std::string>& rows, bool includeSeparato
     std::cout << "\n";
 }
 
-float Account::calculateYearlyDeposit(bool includeDeposit) const
+float Account::calculateYearlyDeposit(float baseAmount, bool includeDeposit) const
 {
-    float baseAmount = m_balance;
-    for (int i = 1; i < m_maturityPeriod; ++i)
+
+    // Calculate the yearly interest
+    float eoyInterest = 0.0f;
+    for (int j = 0; j < 12; ++j)
     {
-        // Calculate the yearly interest
-        float eoyInterest = 0.0f;
-        for (int j = 0; j < 12; ++j)
-        {
-           
-            float interest = calculateMonthlyInterest(baseAmount,
-                                                    includeDeposit);
+
+        float interest = calculateMonthlyInterest(baseAmount, includeDeposit);
         // Increment base amount if `includeDeposit` is true
-            baseAmount = includeDeposit ? baseAmount + m_anticipatedDeposit + interest: baseAmount;
-            eoyInterest += interest;
-        }
-        std::cout << eoyInterest << ", ";
+        baseAmount = includeDeposit ? baseAmount + m_anticipatedDeposit + interest : baseAmount;
+        eoyInterest += interest;
     }
+    std::cout << eoyInterest << ", ";
     std::cout << "\n";
-    return baseAmount;
+    return eoyInterest;
 }
 void Account::printInterestTable(bool includeDeposit) const
 {
@@ -95,14 +91,12 @@ void Account::printInterestTable(bool includeDeposit) const
     printRows({ "Year", "Year End Balance", "Year End Interest" }, true);
 
     float baseAmount = m_balance;
-    calculateYearlyDeposit(baseAmount);''
     for (int i = 1; i < m_maturityPeriod; ++i)
     {
+
+        
         // Calculate the yearly interest
-        float eoyInterest = 0.0f;
-        for (int j = 0; j < 12; ++j)
-            eoyInterest += calculateMonthlyInterest(includeDeposit ? baseAmount + j * m_anticipatedDeposit : baseAmount,
-                                                    includeDeposit);
+        float eoyInterest = calculateYearlyDeposit(baseAmount, includeDeposit);
 
         // Calculate the deposit based on the includeDeposit flag
         const float deposit = (includeDeposit ? m_anticipatedDeposit * 12 : 0);

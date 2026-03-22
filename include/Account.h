@@ -57,7 +57,7 @@ private:
      */
     float calculateMonthlyInterest(float baseAmount, bool includeMonthlyDeposit = false) const;
 
-    float Account::calculateYearlyDeposit(bool includeDeposit) const;
+    float Account::calculateYearlyDeposit(float baseAmount, bool includeDeposit) const;
 };
 
 
