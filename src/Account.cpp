@@ -13,8 +13,8 @@
 #include "Utils.h"
 
 #include <iostream>
-#include <vector>
 #include <regex>
+#include <vector>
 
 Account::Account(float balance, int maturityPeriod, float anticipatedDeposit, int interest)
     : m_balance(balance),
@@ -62,6 +62,7 @@ static void printRows(const std::vector<std::string>& rows, bool includeSeparato
     std::cout << "\n";
 }
 
+
 float Account::calculateYearlyInterest(float baseAmount, bool includeDeposit) const
 {
     // Calculate the yearly interest
@@ -79,6 +80,8 @@ float Account::calculateYearlyInterest(float baseAmount, bool includeDeposit) co
 
     return eoyInterest;
 }
+
+
 void Account::printInterestTable(bool includeDeposit) const
 {
     std::cout << CONSOLE_COLOR; // Configures console to print in color of the config.
@@ -110,36 +113,16 @@ void Account::printInterestTable(bool includeDeposit) const
         // Update the base amount to be the new CI deposit
         baseAmount = totalAmount;
     }
-    // TODO: Revert back to black-white color
-    std::cout << "\n";
-}
-
-float parseAsFloat(std::string line)
-{
-    std::smatch match;
-    std::regex pattern("[$,%]{0,1}(\\d+.{0,1}\\d*)"); // Matches $1.00, 1, 1.00, %5, %5.0, 
-    if (std::regex_search(line, match, pattern))
-    {
-        std::string result = match.str(1);
-        return std::stof(result);
-    }
-    else
-        throw std::invalid_argument("Not a valid input. Must be a number or start with % or $");
-
+    std::cout << CONSOLE_COLOR_RESET << "\n"; // Clears the console color.
 }
 
 
 Account Account::createAccount()
 {
-    //parseAsFloat("$1.0");
-    //parseAsFloat("$1.00");
-    //parseAsFloat("$1.2351234124");
-    //parseAsFloat("1.0");
-    //parseAsFloat("100");
-    //parseAsFloat("%5");
-    //parseAsFloat("5");
-    std::cout << CONSOLE_COLOR; // Configures console to print in color of the config.
 
+    std::cout << CONSOLE_COLOR; // Configures console to print in color of the config.
+    
+    // Prints the header
     std::cout << std::setw(2 * COLUMN_WIDTH) << std::setfill('*') << "" << "\n";
     printCentered(" Data Input ", 2 * COLUMN_WIDTH, '*');
     std::cout << "\n";
@@ -151,12 +134,14 @@ Account Account::createAccount()
     constexpr static unsigned int DEPOSIT_INDEX = 1;
     constexpr static unsigned int INTEREST_INDEX = 2;
     constexpr static unsigned int YEAR_INDEX = 3;
-    
+
+    // List of prompts to show for each input.
     const std::string messages[inputSize] = { "Initial Investment Amount: ", "Monthly Deposit: ", "Annual Interest: ",
-                                         "Number of years: " };
+                                              "Number of Years: " };
+    // Regexes to use for validating each input.
+    const std::regex validationRegex[inputSize] = { PRICE_REGEX, PRICE_REGEX, RATE_REGEX, NUMBER_REGEX };
 
-    float data[inputSize]; // Temporary storage getting data
-
+    float data[inputSize]; // Temporary storage for each input.
 
     int i = 0;
     while (i < inputSize)
@@ -165,26 +150,22 @@ Account Account::createAccount()
         {
             std::cout << messages[i];
             std::string rawBuffer;
-            // TODO: Run validator as per requirement
+            // Gets the input.
             std::getline(std::cin, rawBuffer);
-            data[i] = parseAsFloat(rawBuffer);
+            // Validates and parses the input as a float.
+            data[i] = parseAsFloat(rawBuffer, validationRegex[i]);
             if (data[i] < 1.0f)
                 throw std::invalid_argument("Invalid input. Must be a positive number.");
             ++i;
         }
-        // TODO: Collapse to single exception
         catch (const std::exception& e)
         {
-            // Prints the error
+            // Prints the error.
             std::cout << e.what() << "\n";
             // Clears the input buffer.
             std::cin.clear();
-            // Clears any errorneous input till newline
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
-    std::cout << "Press any key to continue...\n\n\n\n";
-    std::cin.get(); // TODO: Pauses the execution then and there
-
+    std::cout << CONSOLE_COLOR_RESET << "\n"; // Clears the console color.
     return Account(data[AMOUNT_INDEX], data[YEAR_INDEX], data[DEPOSIT_INDEX], data[INTEREST_INDEX]);
 }

@@ -13,8 +13,8 @@
 
 #include <iomanip>
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
 
 /**
  * @brief Outputs a @ref std::string with center alignment to the console.
@@ -64,6 +64,53 @@ inline std::string formatCurrency(float amount)
     data << amount;
 
     return data.str();
+}
+
+
+/**
+ * @brief Briefly suspend the program, waiting for user input before continuing the program.
+ */
+inline void suspendInput()
+{
+    std::cout << CONSOLE_COLOR; // Configures console to print in color of the config.
+    std::cout << "Press any key to continue...";
+    std::cin.get();
+    std::cout << "\n\n\n\n";
+    std::cout << CONSOLE_COLOR_RESET << "\n"; // Clears the console color.
+}
+
+
+/**
+ * @brief Clears the console using platform specific commands.
+ *        `cls` on Windows an `clear` on macOS/Linux/Unix.
+ */
+inline void clearScreen()
+{
+#ifdef _WIN32 // Preprocessor definition for Windows based operating system.
+    std::system("cls");
+#else
+    std::system("clear");
+#endif
+}
+
+
+/**
+ * @brief Match an input against a Regular Expression (@p regex) and convert the @p line to a float.
+ *
+ * @param line  The input to validate and parse.
+ * @param regex The regex to use for validation.
+ *
+ * @return The float that is parsed from the input.
+ *
+ * @throw `std::invalid_argument` If no pattern can be matched in the string @p line.
+ */
+inline float parseAsFloat(const std::string& line, const std::regex& regex = NUMBER_REGEX)
+{
+    std::smatch match;
+    if (std::regex_search(line, match, regex))
+        return std::stof(match.str(1));
+    else
+        throw std::invalid_argument("Not a valid input. Must be a number or start with % or $");
 }
 
 
