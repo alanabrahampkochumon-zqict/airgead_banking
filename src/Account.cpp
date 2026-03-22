@@ -112,3 +112,11 @@ void Account::printInterestTable(bool includeDeposit) const
     // TODO: Revert back to black-white color
     std::cout << "\n";
 }
+
+
+Account Account::createAccount()
+{
+    std::cout << std::setw(2 * COLUMN_WIDTH) << std::setfill('*') << "" << "\n";
+    printCentered(" Data Input ", 2 * COLUMN_WIDTH, '*');
+    return Account(1, 10, 50.0, 5);
+}

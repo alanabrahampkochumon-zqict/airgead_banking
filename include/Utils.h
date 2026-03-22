@@ -21,14 +21,15 @@
  *
  * @param str       The string to print.
  * @param lineWidth The total width of the console output.
+ * @param fill      The fill to use for padding the left and right sides.
  */
-inline void printCentered(const std::string& str, const int lineWidth)
+inline void printCentered(const std::string& str, const int lineWidth, const char fill = ' ')
 {
-    int totalInside = lineWidth - 2;
+    int totalInside = lineWidth; // NOTE: Removed - 2
     int leftPadding = static_cast<int>(totalInside - str.length()) / 2;
     int rightPadding = static_cast<int>(totalInside - str.length() - leftPadding);
 
-    std::cout << std::setfill(' ') << std::setw(leftPadding) << "" << str << std::setw(rightPadding) << "";
+    std::cout << std::setfill(fill) << std::setw(leftPadding) << "" << str << std::setw(rightPadding) << "";
 }
 
 

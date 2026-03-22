@@ -36,6 +36,12 @@ public:
      */
     void printInterestTable(bool includeDeposit = false) const;
 
+    /**
+     * @brief Creates an account taking input from the user.
+     * @return The newly created account.
+     */
+    static Account createAccount();
+
 
 private:
     float m_balance;            ///< Balance in the account.
