@@ -11,7 +11,6 @@
 #include "Config.h"
 
 
-
 class Account
 {
 public:
@@ -46,16 +45,17 @@ private:
 
 
     /**
-     * @brief Calculate the compound interest.
+     * @brief Calculate the monthly compound interest.
      *        Using: \f[
      *                   \text{Compound Interest} = (\text{Opening Amount} + \text{Deposit}) \cdot \frac{12}{100} \cdot
      *                   \text{Interest Rate}
      *               \f]
      *
-     * @param baseAmount The opening amount to use for calculating interest.
+     * @param baseAmount            The opening amount to use for calculating interest.
+     * @param includeMonthlyDeposit A flag to indicate whether to include monthly deposit in calculation.
      * @return The interest payout.
      */
-    float calculateInterest(float baseAmount) const;
+    float calculateMonthlyInterest(float baseAmount, bool includeMonthlyDeposit = false) const;
 };
 
 

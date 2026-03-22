@@ -11,9 +11,10 @@
 
 int main()
 {
-    Account account1(1, 10, 1.0, 5);
+    Account account1(1, 10, 50.0, 5);
     Account account2(50.0, 25, 1.0, 15);
     account1.printInterestTable();
+    account1.printInterestTable(true);
     //account2.printInterestTable();
 }
 

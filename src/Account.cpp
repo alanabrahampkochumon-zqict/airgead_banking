@@ -31,9 +31,10 @@ Account::Account(float balance, int maturityPeriod, float anticipatedDeposit, in
         throw std::invalid_argument("Interest needs to be at least 1%");
 }
 
-float Account::calculateInterest(float baseAmount) const
+float Account::calculateMonthlyInterest(float baseAmount, bool includeMonthlyDeposit) const
 {
-    return (baseAmount + m_anticipatedDeposit) * (static_cast<float>(m_interest) / 12.0f / 100.0f);
+    const float deposit = includeMonthlyDeposit ? m_anticipatedDeposit : 0.0f;
+    return (baseAmount + deposit) * (static_cast<float>(m_interest) / 12.0f / 100.0f);
 }
 
 
@@ -42,7 +43,7 @@ float Account::calculateInterest(float baseAmount) const
  *
  * @param rows             The row of data to print.
  * @param includeSeparator A flag to whether print the separate.
- *                          Default false.
+ *                         Default false.
  */
 static void printRows(const std::vector<std::string>& rows, bool includeSeparator = false)
 {
@@ -75,9 +76,16 @@ void Account::printInterestTable(bool includeDeposit) const
     float baseAmount = m_balance;
     for (int i = 1; i < m_maturityPeriod; ++i)
     {
-        const float interestPayout = calculateInterest(baseAmount);
-        const float totalAmount = baseAmount + interestPayout;
-        printRows({ std::to_string(i), formatCurrency(totalAmount), formatCurrency(interestPayout) }); 
+        // Calculate the yearly interest
+        float eoyInterest = 0.0f;
+        for (int j = 0; j < 12; ++j)
+            eoyInterest += calculateMonthlyInterest(baseAmount, includeDeposit);
+
+        // Calculate end of year amount
+        const float totalAmount = baseAmount + eoyInterest;
+        // Print the amount
+        printRows({ std::to_string(i), formatCurrency(totalAmount), formatCurrency(eoyInterest) }); 
+        // Update the base amount to be the new CI deposit
         baseAmount = totalAmount;
     }
 }
