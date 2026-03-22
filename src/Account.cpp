@@ -165,21 +165,17 @@ Account Account::createAccount()
         {
             std::cout << messages[i];
             std::string rawBuffer;
+            // TODO: Run validator as per requirement
             std::getline(std::cin, rawBuffer);
             data[i] = parseAsFloat(rawBuffer);
             if (data[i] < 1.0f)
                 throw std::invalid_argument("Invalid input. Must be a positive number.");
             ++i;
         }
-        catch (const std::ios_base::failure& _)
+        // TODO: Collapse to single exception
+        catch (const std::exception& e)
         {
-            std::cout << "Invalid option! Try 1 - 4" << "\n";
-            // Clears the input buffer.
-            // Clears any errorneous input till newline
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        catch (const std::invalid_argument& e)
-        {
+            // Prints the error
             std::cout << e.what() << "\n";
             // Clears the input buffer.
             std::cin.clear();
@@ -188,7 +184,7 @@ Account Account::createAccount()
         }
     }
     std::cout << "Press any key to continue...\n\n\n\n";
-    std::cin.get(); // Pauses the execution then and there
+    std::cin.get(); // TODO: Pauses the execution then and there
 
     return Account(data[AMOUNT_INDEX], data[YEAR_INDEX], data[DEPOSIT_INDEX], data[INTEREST_INDEX]);
 }
