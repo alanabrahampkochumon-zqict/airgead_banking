@@ -9,6 +9,7 @@
  */
 
 #include "Account.h"
+#include "Config.h"
 
 #include "Utils.h"
 
@@ -16,14 +17,14 @@
 #include <regex>
 #include <vector>
 
-Account::Account(float balance, int maturityPeriod, float anticipatedDeposit, int interest)
-    : m_balance(balance),
-      m_maturityPeriod(maturityPeriod),
-      m_anticipatedDeposit(anticipatedDeposit),
-      m_interest(interest)
+Account::Account(const float t_balance, const int t_maturityPeriod, const float t_anticipatedDeposit, const float t_interest)
+    : m_balance(t_balance),
+      m_maturityPeriod(t_maturityPeriod),
+      m_anticipatedDeposit(t_anticipatedDeposit),
+      m_interest(t_interest)
 {
     if (m_balance < 0.0f)
-        throw std::invalid_argument("Account cannot be initialized with a negative balance.");
+        throw std::invalid_argument("Account cannot be initialized with a negative t_balance.");
     if (m_maturityPeriod < 0)
         throw std::invalid_argument("Maturity period cannot be less than a year");
     if (m_anticipatedDeposit < 0.0)
@@ -32,30 +33,30 @@ Account::Account(float balance, int maturityPeriod, float anticipatedDeposit, in
         throw std::invalid_argument("Interest needs to be at least 1%");
 }
 
-float Account::calculateMonthlyInterest(float baseAmount, bool includeMonthlyDeposit) const
+float Account::calculateMonthlyInterest(const float t_baseAmount, const bool t_includeMonthlyDeposit) const
 {
-    const float deposit = includeMonthlyDeposit ? m_anticipatedDeposit : 0.0f;
-    return (baseAmount + deposit) * (static_cast<float>(m_interest) / 12.0f / 100.0f);
+    const float deposit = t_includeMonthlyDeposit ? m_anticipatedDeposit : 0.0f;
+    return (t_baseAmount + deposit) * (static_cast<float>(m_interest) / 12.0f / 100.0f);
 }
 
 
 /**
  * @brief Output the content as a row.
  *
- * @param rows             The row of data to print.
- * @param includeSeparator A flag to whether print the separate.
+ * @param[in] t_rows             The row of data to print.
+ * @param[in] t_includeSeparator A flag to whether print the separate.
  *                         Default false.
  */
-static void printRows(const std::vector<std::string>& rows, bool includeSeparator = false)
+static void printRows(const std::vector<std::string>& t_rows, const bool t_includeSeparator = false)
 {
-    for (const auto& row : rows)
+    for (const auto& row : t_rows)
         std::cout << std::setfill(' ') << std::setw(COLUMN_WIDTH) << row;
 
     // Outputs the separator ----
-    if (includeSeparator)
+    if (t_includeSeparator)
     {
         std::cout << "\n"
-                  << std::setw(COLUMN_WIDTH * rows.size()) << std::setfill('-') << ""
+                  << std::setw(COLUMN_WIDTH * t_rows.size()) << std::setfill('-') << ""
                   << "\n";
         std::cout << std::setfill(' ');
     }
@@ -63,16 +64,16 @@ static void printRows(const std::vector<std::string>& rows, bool includeSeparato
 }
 
 
-float Account::calculateYearlyInterest(float baseAmount, bool includeDeposit) const
+float Account::calculateYearlyInterest(float t_baseAmount, const bool t_includeDeposit) const
 {
     // Calculate the yearly interest
     float eoyInterest = 0.0f;
     for (int j = 0; j < 12; ++j)
     {
-        const float interest = calculateMonthlyInterest(baseAmount, includeDeposit);
+        const float interest = calculateMonthlyInterest(t_baseAmount, t_includeDeposit);
 
-        // Increment base amount if `includeDeposit` is true
-        baseAmount = includeDeposit ? baseAmount + m_anticipatedDeposit + interest : baseAmount;
+        // Increment base amount if `t_includeDeposit` is true
+        t_baseAmount = t_includeDeposit ? t_baseAmount + m_anticipatedDeposit + interest : t_baseAmount + interest;
 
         // Add the current month's interest to the yearly total
         eoyInterest += interest;
@@ -82,12 +83,12 @@ float Account::calculateYearlyInterest(float baseAmount, bool includeDeposit) co
 }
 
 
-void Account::printInterestTable(bool includeDeposit) const
+void Account::printInterestTable(const bool t_includeDeposit) const
 {
     std::cout << CONSOLE_COLOR; // Configures console to print in color of the config.
 
     // Prints the header based on whether to include the deposit.
-    if (includeDeposit)
+    if (t_includeDeposit)
         printTableHeader("Balance and Interest Without Additional Monthly Deposit", COLUMNS * COLUMN_WIDTH);
     else
         printTableHeader("Balance and Interest With Additional Monthly Deposit", COLUMNS * COLUMN_WIDTH);
@@ -99,10 +100,10 @@ void Account::printInterestTable(bool includeDeposit) const
     for (int i = 0; i < m_maturityPeriod; ++i)
     {
         // Calculate the yearly interest
-        const float eoyInterest = calculateYearlyInterest(baseAmount, includeDeposit);
+        const float eoyInterest = calculateYearlyInterest(baseAmount, t_includeDeposit);
 
-        // Calculate the deposit based on the includeDeposit flag
-        const float deposit = (includeDeposit ? m_anticipatedDeposit * 12 : 0);
+        // Calculate the deposit based on the t_includeDeposit flag
+        const float deposit = (t_includeDeposit ? m_anticipatedDeposit * 12 : 0);
 
         // Calculate end of year amount
         const float totalAmount = baseAmount + eoyInterest + deposit;
@@ -154,7 +155,7 @@ Account Account::createAccount()
             std::getline(std::cin, rawBuffer);
             // Validates and parses the input as a float.
             data[i] = parseAsFloat(rawBuffer, validationRegex[i]);
-            if (data[i] < 1.0f)
+            if (data[i] < 0.0f)
                 throw std::invalid_argument("Invalid input. Must be a positive number.");
             ++i;
         }

@@ -11,39 +11,42 @@
  */
 
 
+#include "Config.h"
+
 #include <iomanip>
 #include <iostream>
+#include <regex>
 #include <sstream>
 #include <string>
 
 /**
  * @brief Outputs a @ref std::string with center alignment to the console.
  *
- * @param str       The string to print.
- * @param lineWidth The total width of the console output.
- * @param fill      The fill to use for padding the left and right sides.
+ * @param t_str       The string to print.
+ * @param t_lineWidth The total width of the console output.
+ * @param t_fill      The fill to use for padding the left and right sides.
  */
-inline void printCentered(const std::string& str, const int lineWidth, const char fill = ' ')
+inline void printCentered(const std::string& t_str, const int t_lineWidth, const char t_fill = ' ')
 {
-    int totalInside = lineWidth; // NOTE: Removed - 2
-    int leftPadding = static_cast<int>(totalInside - str.length()) / 2;
-    int rightPadding = static_cast<int>(totalInside - str.length() - leftPadding);
+    int totalInside = t_lineWidth; // NOTE: Removed - 2
+    int leftPadding = static_cast<int>(totalInside - t_str.length()) / 2;
+    int rightPadding = static_cast<int>(totalInside - t_str.length() - leftPadding);
 
-    std::cout << std::setfill(fill) << std::setw(leftPadding) << "" << str << std::setw(rightPadding) << "";
+    std::cout << std::setfill(t_fill) << std::setw(leftPadding) << "" << t_str << std::setw(rightPadding) << "";
 }
 
 
 /**
  * @brief Outputs a table header to the screen.
  *
- * @param str       The string to print.
- * @param lineWidth The total width of the console output.
+ * @param t_str       The string to print.
+ * @param t_lineWidth The total width of the console output.
  */
-inline void printTableHeader(const std::string& str, const int lineWidth)
+inline void printTableHeader(const std::string& t_str, const int t_lineWidth)
 {
-    std::cout << std::setw(lineWidth);
-    printCentered(str, lineWidth);
-    std::cout << "\n" << std::setw(lineWidth) << std::setfill('=') << "" << "\n";
+    std::cout << std::setw(t_lineWidth);
+    printCentered(t_str, t_lineWidth);
+    std::cout << "\n" << std::setw(t_lineWidth) << std::setfill('=') << "" << "\n";
 }
 
 
@@ -51,17 +54,17 @@ inline void printTableHeader(const std::string& str, const int lineWidth)
  * @brief Formats an amount to a currency with 1/100th precision.
  *        Adds currency symbol.
  *
- * @param amount The amount to format.
+ * @param t_amount The amount to format.
  *
  * @return The formatted amount.
  */
-inline std::string formatCurrency(float amount)
+inline std::string formatCurrency(float t_amount)
 {
     std::stringstream data;
     data << CURRENCY_SYMBOL;
     data << std::setprecision(2);
     data << std::fixed;
-    data << amount;
+    data << t_amount;
 
     return data.str();
 }
