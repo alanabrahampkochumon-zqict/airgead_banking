@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <vector>
+#include <regex>
 
 Account::Account(float balance, int maturityPeriod, float anticipatedDeposit, int interest)
     : m_balance(balance),
@@ -113,9 +114,30 @@ void Account::printInterestTable(bool includeDeposit) const
     std::cout << "\n";
 }
 
+float parseAsFloat(std::string line)
+{
+    std::smatch match;
+    std::regex pattern("[$,%]{0,1}(\\d+.{0,1}\\d*)"); // Matches $1.00, 1, 1.00, %5, %5.0, 
+    if (std::regex_search(line, match, pattern))
+    {
+        std::string result = match.str(1);
+        return std::stof(result);
+    }
+    else
+        throw std::invalid_argument("Not a valid input. Must be a number or start with % or $");
+
+}
+
 
 Account Account::createAccount()
 {
+    //parseAsFloat("$1.0");
+    //parseAsFloat("$1.00");
+    //parseAsFloat("$1.2351234124");
+    //parseAsFloat("1.0");
+    //parseAsFloat("100");
+    //parseAsFloat("%5");
+    //parseAsFloat("5");
     std::cout << CONSOLE_COLOR; // Configures console to print in color of the config.
 
     std::cout << std::setw(2 * COLUMN_WIDTH) << std::setfill('*') << "" << "\n";
@@ -142,20 +164,21 @@ Account Account::createAccount()
         try
         {
             std::cout << messages[i];
-            std::cin >> data[i];
+            std::string rawBuffer;
+            std::getline(std::cin, rawBuffer);
+            data[i] = parseAsFloat(rawBuffer);
             if (data[i] < 1.0f)
-                throw std::runtime_error("Invalid input. Must be a positive number.");
+                throw std::invalid_argument("Invalid input. Must be a positive number.");
             ++i;
         }
         catch (const std::ios_base::failure& _)
         {
             std::cout << "Invalid option! Try 1 - 4" << "\n";
             // Clears the input buffer.
-            std::cin.clear();
             // Clears any errorneous input till newline
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
-        catch (const std::runtime_error& e)
+        catch (const std::invalid_argument& e)
         {
             std::cout << e.what() << "\n";
             // Clears the input buffer.
