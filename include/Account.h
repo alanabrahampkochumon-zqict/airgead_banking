@@ -56,6 +56,8 @@ private:
      * @return The interest payout.
      */
     float calculateMonthlyInterest(float baseAmount, bool includeMonthlyDeposit = false) const;
+
+    float Account::calculateYearlyDeposit(bool includeDeposit) const;
 };
 
 
