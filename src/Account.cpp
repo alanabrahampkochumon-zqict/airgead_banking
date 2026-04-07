@@ -89,9 +89,9 @@ void Account::printInterestTable(const bool t_includeDeposit) const
 
     // Prints the header based on whether to include the deposit.
     if (t_includeDeposit)
-        printTableHeader("Balance and Interest Without Additional Monthly Deposit", COLUMNS * COLUMN_WIDTH);
+        printTableHeader("Balance and Interest with Additional Monthly Deposit", COLUMNS * COLUMN_WIDTH);
     else
-        printTableHeader("Balance and Interest With Additional Monthly Deposit", COLUMNS * COLUMN_WIDTH);
+        printTableHeader("Balance and Interest without Additional Monthly Deposit", COLUMNS * COLUMN_WIDTH);
 
     printRows({ "Year", "Year End Balance", "Year End Interest" }, true);
 
