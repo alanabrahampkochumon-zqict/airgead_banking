@@ -7,7 +7,7 @@ This project was done as a part of CS210 at Southern New Hampshire University.
 
 <img src="assets/screen-1.png" alt="First screen of program">
 <br>
-<img src="assets/screen-2.png" alt="First screen of program">
+<img src="assets/screen-2.png" alt="Second screen of program">
 
 ## How to run
 
